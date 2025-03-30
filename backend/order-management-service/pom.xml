@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.fooddeliverysystem</groupId>
-    <artifactId>new-service</artifactId>
+    <artifactId>order-mng</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>new-service</name>
     <description>new-service</description>
@@ -48,6 +48,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 
