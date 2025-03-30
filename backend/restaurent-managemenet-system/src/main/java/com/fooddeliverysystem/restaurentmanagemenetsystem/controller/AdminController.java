@@ -24,18 +24,18 @@ public class AdminController {
         return adminService.registerAdmin(userDTO);
     }
 
-    @GetMapping("/api/users")
+    @GetMapping("/users")
     public List<UserDTO> getAllUsers() {
         return adminService.getAllUsers();
     }
 
-    @PutMapping("/api/restaurants/{restaurantId}/verify")
+    @PutMapping("/restaurants/{restaurantId}/verify")
     public RestaurantDTO verifyRestaurant(@PathVariable Long restaurantId,
                                           @RequestParam boolean verified) {
         return adminService.verifyRestaurant(restaurantId, verified);
     }
 
-    @PostMapping("/api/financial-transactions")
+    @PostMapping("/financial-transactions")
     @ResponseStatus(HttpStatus.OK)
     public void processFinancialTransaction(@RequestParam Long restaurantId,
                                             @RequestParam double amount) {
