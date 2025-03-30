@@ -3,6 +3,7 @@ package com.fooddeliverysystem.restaurentmanagemenetsystem.service;
 import com.fooddeliverysystem.restaurentmanagemenetsystem.dto.RestaurantDTO;
 import com.fooddeliverysystem.restaurentmanagemenetsystem.dto.UserDTO;
 import com.fooddeliverysystem.restaurentmanagemenetsystem.model.Restaurant;
+import com.fooddeliverysystem.restaurentmanagemenetsystem.model.User;
 import com.fooddeliverysystem.restaurentmanagemenetsystem.repository.RestaurantRepository;
 import com.fooddeliverysystem.restaurentmanagemenetsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,19 @@ public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
+
+    @Override
+    public UserDTO registerAdmin(UserDTO userDTO) {
+        // Create a new user and force the ADMIN role
+        User user = User.builder()
+                .username(userDTO.getUsername())
+                .email(userDTO.getEmail())
+                .role(User.Role.ADMIN)  // Using enum here (ensure your User model supports this)
+                .build();
+        user = userRepository.save(user);
+        userDTO.setId(user.getId());
+        return userDTO;
+    }
 
     @Override
     public List<UserDTO> getAllUsers() {

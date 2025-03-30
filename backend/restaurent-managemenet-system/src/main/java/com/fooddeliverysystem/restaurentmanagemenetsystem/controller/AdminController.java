@@ -16,6 +16,14 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDTO registerAdmin(@RequestBody UserDTO userDTO) {
+        // Ensure the role is ADMIN regardless of what the client sends
+        userDTO.setRole("ADMIN");
+        return adminService.registerAdmin(userDTO);
+    }
+
     @GetMapping("/api/users")
     public List<UserDTO> getAllUsers() {
         return adminService.getAllUsers();
