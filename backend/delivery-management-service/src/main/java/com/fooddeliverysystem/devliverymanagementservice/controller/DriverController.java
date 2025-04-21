@@ -13,6 +13,11 @@ public class DriverController {
 
     private final DeliveryService deliveryService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "Driver Controller working!";
+    }
+
     // Endpoint to register a new driver
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)

@@ -15,6 +15,11 @@ public class DeliveryController {
 
     private final DeliveryService deliveryService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "Delivery Controller working!";
+    }
+
     // Endpoint to assign a driver to an order based on order location
     @PostMapping("/assign")
     @ResponseStatus(HttpStatus.CREATED)

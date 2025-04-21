@@ -1,17 +1,22 @@
+version: "3.8"
+
 services:
   delivery-management-service:
-    build: ./delivery-management-service
+    build:
+      context: ./delivery-management-service
+    image: delivery-management-service:latest
     container_name: delivery-management-service
     ports:
       - "8084:8084"
     environment:
-      # Change the host/IP if needed. For Windows/macOS, host.docker.internal works.
       - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/deliverydb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
 
   order-management-service:
-    build: ./order-management-service
+    build:
+      context: ./order-management-service
+    image: order-management-service:latest
     container_name: order-management-service
     ports:
       - "8083:8083"
@@ -21,7 +26,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
 
   restaurant-management-service:
-    build: ./restaurant-management-service
+    build:
+      context: ./restaurant-management-service
+    image: restaurant-management-service:latest
     container_name: restaurant-management-service
     ports:
       - "8082:8082"
@@ -29,3 +36,18 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/restaurantdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    image: api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - delivery-management-service
+      - order-management-service
+      - restaurant-management-service
+    # (optional) if you want to run the gateway with a special Spring profile:
+    # environment:
+    #   - SPRING_PROFILES_ACTIVE=local

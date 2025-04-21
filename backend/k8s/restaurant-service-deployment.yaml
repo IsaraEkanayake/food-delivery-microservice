@@ -15,6 +15,7 @@ spec:
       containers:
         - name: restaurant-management-service
           image: restaurant-management-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082
           env:

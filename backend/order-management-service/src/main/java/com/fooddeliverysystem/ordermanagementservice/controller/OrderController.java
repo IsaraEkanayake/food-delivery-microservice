@@ -16,6 +16,11 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "Order Controller working!";
+    }
+
     // Customer registration
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)

@@ -16,6 +16,11 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "Restaurant Controller working!";
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantDTO createRestaurant(@RequestBody RestaurantDTO restaurantDTO) {

@@ -16,6 +16,11 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "Admin Controller working!";
+    }
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO registerAdmin(@RequestBody UserDTO userDTO) {

@@ -15,6 +15,7 @@ spec:
       containers:
         - name: delivery-management-service
           image: delivery-management-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8084
           env:
@@ -24,6 +25,7 @@ spec:
               value: "root"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "root"
+
 ---
 apiVersion: v1
 kind: Service
@@ -37,3 +39,4 @@ spec:
       port: 8084
       targetPort: 8084
   type: ClusterIP
+
