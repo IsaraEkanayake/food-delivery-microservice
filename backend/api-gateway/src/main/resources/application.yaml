@@ -12,22 +12,22 @@ spring:
     gateway:
       routes:
         - id: order-service
-          uri: http://localhost:8083
+          uri: http://order-management-service:8083   # ← Kubernetes Service name
           predicates:
             - Path=/api/orders/**
         - id: restaurant-service
-          uri: http://localhost:8082
+          uri: http://restaurant-management-service:8082
           predicates:
             - Path=/api/restaurants/**
         - id: delivery-service
-          uri: http://localhost:8084
+          uri: http://delivery-management-service:8084
           predicates:
             - Path=/api/deliveries/**
         - id: admin-service
-          uri: http://localhost:8082
+          uri: http://restaurant-management-service:8082   # or your admin service name
           predicates:
             - Path=/api/admin/**
         - id: drivers-service
-          uri: http://localhost:8084
+          uri: http://delivery-management-service:8084     # or your drivers service name
           predicates:
             - Path=/api/drivers/**
