@@ -8,6 +8,10 @@ import Login from './components/order-management/Login/Login';
 import Status from './components/order-management/Status/Status';
 import Menu from './components/order-management/Menu/Menu';  // ← Import the Menu component
 
+import DeliveryLogin from './components/delivery-management/delivery-login/DeliveryLogin';
+import DeliveryRegister from './components/delivery-management/delivery-login/DeliveryRegister';
+import DeliveryDashboard from './components/delivery-management/delivery-dashboard/DeliveryDashboard';
+
 import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -51,6 +55,12 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/status" element={<Status />} />
+
+          {/* Delivery Authentication Screens */}
+          <Route path="/delivery-login" element={<DeliveryLogin />} />
+          <Route path="/delivery-register" element={<DeliveryRegister />} />
+          <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+
         </Routes>
       </div>
     </Router>
