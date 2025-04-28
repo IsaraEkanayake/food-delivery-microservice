@@ -1,7 +1,7 @@
 package com.fooddeliverysystem.devliverymanagementservice.model;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "drivers")
@@ -10,18 +10,19 @@ import jakarta.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Driver {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String fullName;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String phone;
 
-    // Current location coordinates
-    private Double latitude;
-    private Double longitude;
+    private String vehicle;
 
-    // Indicates if the driver is available for new deliveries
-    private Boolean available;
+    private String password;  // Store hashed password ideally (bcrypt)
 }
