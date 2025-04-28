@@ -8,10 +8,18 @@ import {
   TextField,
   CircularProgress,
   Alert,
+  Snackbar,
+  Modal,
+  Box as ModalBox,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -20,6 +28,13 @@ const Cart = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [updatedPortion, setUpdatedPortion] = useState('regular');
+  const [updatedQty, setUpdatedQty] = useState(1);
+  const [updatedSpecialInstructions, setUpdatedSpecialInstructions] = useState('');
 
   useEffect(() => {
     const fetchCustomerOrders = async () => {
@@ -40,48 +55,101 @@ const Cart = () => {
     navigate('/menu');
   };
 
-  const handleDeleteItem = async (orderId, itemId) => {
+  const handleDeleteItem = async (orderId) => {
     try {
       await axios.delete(`http://localhost:8083/api/orders/${orderId}/customer/17`);
       setOrders(prevOrders => 
         prevOrders.filter(order => order.id !== orderId)
       );
+      setSnackbarMessage('Item removed successfully');
+      setSnackbarOpen(true);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to delete item');
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to delete item';
+      setError(errorMsg);
+      setSnackbarMessage(errorMsg);
+      setSnackbarOpen(true);
     }
+  };
+
+  const calculateItemPrice = (item) => {
+    const basePrice = parseFloat(item.price);
+    return item.portion === 'full' ? basePrice + 200 : basePrice;
   };
 
   const handleQuantityChange = async (orderId, itemId, newQty) => {
     if (newQty < 1) return;
-    
     try {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-      
-      const updatedOrder = {
-        ...order,
-        orderItems: order.orderItems.map(item => 
-          item.id === itemId ? { ...item, qty: newQty } : item
-        )
-      };
-      
-      await axios.put(
-        `http://localhost:8083/api/orders/${orderId}/customer/17`,
-        updatedOrder
+      const response = await axios.patch(
+        `http://localhost:8083/api/orders/${orderId}/items/${itemId}/customer/17`,
+        { qty: newQty }
       );
-      
       setOrders(prevOrders =>
-        prevOrders.map(o => o.id === orderId ? updatedOrder : o)
+        prevOrders.map(order => 
+          order.id === response.data.id ? response.data : order
+        )
       );
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to update quantity');
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to update quantity';
+      setError(errorMsg);
+      setSnackbarMessage(errorMsg);
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleUpdateItem = (orderId, itemId) => {
+    const order = orders.find(o => o.id === orderId);
+    const item = order?.orderItems.find(i => i.id === itemId);
+    
+    if (item) {
+      setSelectedItem({ ...item, orderId });
+      setUpdatedPortion(item.portion);
+      setUpdatedQty(item.qty);
+      setUpdatedSpecialInstructions(item.specialInstructions || '');
+      setModalOpen(true);
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setSelectedItem(null);
+    setUpdatedPortion('regular');
+    setUpdatedQty(1);
+    setUpdatedSpecialInstructions('');
+  };
+
+  const handleUpdateItemSubmit = async () => {
+    if (!selectedItem) return;
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:8083/api/orders/${selectedItem.orderId}/items/${selectedItem.id}/customer/17`,
+        {
+          portion: updatedPortion,
+          qty: updatedQty,
+          specialInstructions: updatedSpecialInstructions,
+        }
+      );
+      setOrders(prevOrders =>
+        prevOrders.map(order => 
+          order.id === response.data.id ? response.data : order
+        )
+      );
+      handleModalClose();
+      setSnackbarMessage('Item updated successfully');
+      setSnackbarOpen(true);
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to update item';
+      setError(errorMsg);
+      setSnackbarMessage(errorMsg);
+      setSnackbarOpen(true);
     }
   };
 
   const calculateSubtotal = () => {
     return orders.reduce((sum, order) => {
       return sum + order.orderItems.reduce((orderSum, item) => {
-        return orderSum + (parseFloat(item.price) * item.qty);
+        const itemPrice = calculateItemPrice(item);
+        return orderSum + (itemPrice * item.qty);
       }, 0);
     }, 0);
   };
@@ -89,24 +157,17 @@ const Cart = () => {
   const subtotal = calculateSubtotal();
 
   const handleCheckout = () => {
-    navigate('/'); // Navigate to home page
+    navigate('/', { state: { orders } });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="error">{error}</Alert>
-        <Button sx={{ mt: 2 }} onClick={() => window.location.reload()}>
-          Retry
-        </Button>
       </Box>
     );
   }
@@ -129,15 +190,15 @@ const Cart = () => {
         </IconButton>
         <Typography variant="h5">Araliya Food Cabin</Typography>
       </Box>
-      <Typography
-        variant="body1"
-        color="text.secondary"
-        sx={{ mb: { xs: 2, md: 3 } }}
-      >
-        Deliver to 329 Welivita Rd
-      </Typography>
 
       <Divider sx={{ bgcolor: 'grey.300', mb: { xs: 2, md: 3 } }} />
+
+      {/* Error Alert */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       {/* Cart Items */}
       {orders.length === 0 ? (
@@ -150,7 +211,7 @@ const Cart = () => {
             <Box key={`${order.id}-${item.id}`} sx={{ display: 'flex', mb: { xs: 2, md: 3 } }}>
               <Box
                 component="img"
-                src={'https://via.placeholder.com/100'}
+                src={item.imageUrl || 'https://via.placeholder.com/100'}
                 alt={item.name}
                 sx={{
                   width: { xs: 80, md: 100 },
@@ -169,13 +230,18 @@ const Cart = () => {
                   Ordered: {new Date(order.orderDate).toLocaleString()}
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 1 }}>
-                  LKR {parseFloat(item.price).toFixed(2)}
+                  LKR {(calculateItemPrice(item) * item.qty).toFixed(2)}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <IconButton onClick={() => handleDeleteItem(order.id, item.id)}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <IconButton onClick={() => handleUpdateItem(order.id, item.id)}>
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton onClick={() => handleDeleteItem(order.id)}>
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Box>
                 <Box
                   sx={{
                     display: 'inline-flex',
@@ -189,6 +255,7 @@ const Cart = () => {
                   <IconButton 
                     size="small"
                     onClick={() => handleQuantityChange(order.id, item.id, item.qty - 1)}
+                    disabled={item.qty <= 1}
                   >
                     <RemoveIcon fontSize="small" />
                   </IconButton>
@@ -224,59 +291,95 @@ const Cart = () => {
         + Add items
       </Button>
 
-      {/* Order Note */}
-      <Box sx={{ mb: { xs: 2, md: 3 } }}>
-        <Typography variant="h6" gutterBottom>
-          Add an order note
-        </Typography>
-        <TextField
-          placeholder="Utensils, special instructions, etc."
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={3}
-        />
-      </Box>
-
       <Divider sx={{ bgcolor: 'grey.300', mb: { xs: 2, md: 3 } }} />
 
       {/* Subtotal */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 2, md: 3 } }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h6">Subtotal</Typography>
         <Typography variant="h6">LKR {subtotal.toFixed(2)}</Typography>
       </Box>
 
-      {/* Promotion Banner */}
-      <Box
-        sx={{
-          bgcolor: '#2e7d32',
-          color: '#fff',
-          py: { xs: 1, md: 1.5 },
-          px: { xs: 2, md: 3 },
-          borderRadius: 1,
-          textAlign: 'center',
-          mb: { xs: 2, md: 3 },
-        }}
-      >
-        Add LKR 350 to save 20% with promotions
-      </Box>
-
-      {/* Checkout */}
+      {/* Checkout Button */}
       <Button
         variant="contained"
         fullWidth
-        disabled={orders.length === 0}
-        onClick={handleCheckout} // Added onClick handler
+        onClick={handleCheckout}
         sx={{
-          bgcolor: 'primary.main',
-          color: '#fff',
           textTransform: 'none',
-          py: { xs: 1.2, md: 1.8 },
-          fontSize: { xs: '1rem', md: '1.1rem' },
+          py: { xs: 1, md: 1.5 },
+          bgcolor: '#1976d2',
+          ':hover': { bgcolor: '#1565c0' },
         }}
       >
-        Go to checkout
+        Proceed to Checkout
       </Button>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
+
+      {/* Edit Item Modal */}
+      <Modal open={modalOpen} onClose={handleModalClose}>
+        <ModalBox
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 24,
+            width: { xs: 300, md: 400 },
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Update Item
+          </Typography>
+
+          {/* Portion Selector */}
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Portion</InputLabel>
+            <Select
+              value={updatedPortion}
+              onChange={(e) => setUpdatedPortion(e.target.value)}
+              label="Portion"
+            >
+              <MenuItem value="regular">Regular</MenuItem>
+              <MenuItem value="full">Full</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Quantity Field */}
+          <TextField
+            label="Quantity"
+            type="number"
+            fullWidth
+            value={updatedQty}
+            onChange={(e) => setUpdatedQty(Number(e.target.value))}
+            sx={{ mb: 2 }}
+          />
+
+          {/* Special Instructions */}
+          <TextField
+            label="Special Instructions"
+            fullWidth
+            multiline
+            rows={3}
+            value={updatedSpecialInstructions}
+            onChange={(e) => setUpdatedSpecialInstructions(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <Button variant="contained" fullWidth onClick={handleUpdateItemSubmit}>
+            Update
+          </Button>
+        </ModalBox>
+      </Modal>
     </Box>
   );
 };

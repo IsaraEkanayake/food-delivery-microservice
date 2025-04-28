@@ -1,6 +1,7 @@
 package com.fooddeliverysystem.ordermanagementservice.controller;
 
 import com.fooddeliverysystem.ordermanagementservice.dto.OrderDTO;
+import com.fooddeliverysystem.ordermanagementservice.dto.OrderItemDTO;
 import com.fooddeliverysystem.ordermanagementservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,14 +26,15 @@ public class OrderController {
         return orderService.createOrder(orderDTO);
     }
 
-    @PutMapping("/{orderId}/customer/{customerId}")
-    public OrderDTO updateOrderForCustomer(
-            @PathVariable Long orderId,
-            @PathVariable Long customerId,
-            @RequestBody OrderDTO orderDTO) {
-        orderDTO.setCustomerId(customerId);
-        return orderService.updateOrder(orderId, orderDTO);
-    }
+  // In OrderController.java
+@PatchMapping("/{orderId}/items/{itemId}/customer/{customerId}")
+public OrderDTO updateOrderItem(
+        @PathVariable Long orderId,
+        @PathVariable Long itemId,
+        @PathVariable Long customerId,
+        @RequestBody OrderItemDTO itemDTO) {
+    return orderService.updateOrderItem(orderId, itemId, customerId, itemDTO);
+}
 
     @GetMapping("/{orderId}/customer/{customerId}")
     public OrderDTO getCustomerOrder(

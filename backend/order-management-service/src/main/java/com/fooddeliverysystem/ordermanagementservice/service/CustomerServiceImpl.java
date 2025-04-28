@@ -3,7 +3,6 @@ package com.fooddeliverysystem.ordermanagementservice.service;
 import com.fooddeliverysystem.ordermanagementservice.dto.CustomerDTO;
 import com.fooddeliverysystem.ordermanagementservice.model.Customer;
 import com.fooddeliverysystem.ordermanagementservice.repository.CustomerRepository;
-import com.fooddeliverysystem.ordermanagementservice.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

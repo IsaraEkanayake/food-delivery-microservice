@@ -32,9 +32,18 @@ const Register = () => {
     setError("");
     setIsLoading(true);
 
+    // Validate all fields are filled
+    for (const key in formData) {
+      if (!formData[key].trim()) {
+        setError(`Please fill out the ${key === "confirmPassword" ? "Confirm Password" : key.charAt(0).toUpperCase() + key.slice(1)} field.`);
+        setIsLoading(false);
+        return;
+      }
+    }
+
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       setIsLoading(false);
       return;
     }
@@ -161,7 +170,7 @@ const Register = () => {
           />
         </Box>
 
-        {/* Phone */}
+        {/* Phone Number */}
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
           <img src={phone} alt="phone" style={{ width: 24, height: 24, marginRight: 10 }} />
           <TextField

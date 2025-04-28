@@ -5,7 +5,6 @@ import com.fooddeliverysystem.ordermanagementservice.dto.OrderItemDTO;
 import com.fooddeliverysystem.ordermanagementservice.model.*;
 import com.fooddeliverysystem.ordermanagementservice.repository.CustomerRepository;
 import com.fooddeliverysystem.ordermanagementservice.repository.OrderRepository;
-import com.fooddeliverysystem.ordermanagementservice.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,38 +76,28 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO updateOrder(Long orderId, OrderDTO orderDTO) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-
-        if (!order.getCustomer().getId().equals(orderDTO.getCustomerId())) {
-            throw new IllegalStateException("Order does not belong to customer");
-        }
-
+    public OrderDTO updateOrderItem(Long orderId, Long itemId, Long customerId, OrderItemDTO itemDTO) {
+        Order order = orderRepository.findByIdAndCustomerId(orderId, customerId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Order not found or doesn't belong to customer"));
+    
         if (order.getStatus() != OrderStatus.PENDING) {
             throw new IllegalStateException("Only pending orders can be modified");
         }
-
-        if (orderDTO.getOrderItems() != null) {
-            order.getOrderItems().clear();
-            Order finalOrder = order;
-            List<OrderItem> updatedItems = orderDTO.getOrderItems().stream()
-                    .map(itemDTO -> OrderItem.builder()
-                            .name(itemDTO.getName())
-                            .price(itemDTO.getPrice())
-                            .portion(itemDTO.getPortion())
-                            .specialInstructions(itemDTO.getSpecialInstructions())
-                            .qty(itemDTO.getQty())
-                            .order(finalOrder)
-                            .build())
-                    .collect(Collectors.toList());
-            order.getOrderItems().addAll(updatedItems);
-        }
-
+    
+        OrderItem itemToUpdate = order.getOrderItems().stream()
+                .filter(item -> item.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Order item not found"));
+    
+        // Update the item properties
+        itemToUpdate.setPortion(itemDTO.getPortion());
+        itemToUpdate.setQty(itemDTO.getQty());
+        itemToUpdate.setSpecialInstructions(itemDTO.getSpecialInstructions());
+    
         order = orderRepository.save(order);
         return convertToOrderDTO(order);
     }
-
     @Override
     public OrderDTO getCustomerOrder(Long orderId, Long customerId) {
         Order order = orderRepository.findByIdAndCustomerId(orderId, customerId)
@@ -125,18 +114,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelCustomerOrder(Long orderId, Long customerId) {
-        Order order = orderRepository.findByIdAndCustomerId(orderId, customerId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Order not found or doesn't belong to customer"));
+@Transactional
+public void cancelCustomerOrder(Long orderId, Long customerId) {
+    Order order = orderRepository.findByIdAndCustomerId(orderId, customerId)
+            .orElseThrow(() -> new EntityNotFoundException(
+                    "Order not found or doesn't belong to customer"));
 
-        if (order.getStatus() != OrderStatus.PENDING) {
-            throw new IllegalStateException("Only pending orders can be cancelled");
-        }
-
-        order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
+    if (order.getStatus() != OrderStatus.PENDING) {
+        throw new IllegalStateException("Only pending orders can be cancelled");
     }
+
+    // This will cascade delete all order items if properly mapped
+    orderRepository.delete(order);
+    
+    // Alternatively, if you need to handle deletion manually:
+    // orderItemRepository.deleteAllByOrderId(orderId);
+    // orderRepository.delete(order);
+}
 
     private OrderDTO convertToOrderDTO(Order order) {
         OrderDTO orderDTO = OrderDTO.builder()
