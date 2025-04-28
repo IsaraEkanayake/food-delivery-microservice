@@ -16,15 +16,9 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "Admin Controller working!";
-    }
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO registerAdmin(@RequestBody UserDTO userDTO) {
-        // Ensure the role is ADMIN regardless of what the client sends
         userDTO.setRole("ADMIN");
         return adminService.registerAdmin(userDTO);
     }
@@ -34,16 +28,21 @@ public class AdminController {
         return adminService.getAllUsers();
     }
 
+    @GetMapping("/restaurants")
+    public List<RestaurantDTO> getAllRestaurants() {
+        return adminService.getAllRestaurants();
+    }
+
     @PutMapping("/restaurants/{restaurantId}/verify")
-    public RestaurantDTO verifyRestaurant(@PathVariable Long restaurantId,
-                                          @RequestParam boolean verified) {
+    public RestaurantDTO verifyRestaurant(@PathVariable String restaurantId,
+                                        @RequestParam boolean verified) {
         return adminService.verifyRestaurant(restaurantId, verified);
     }
 
     @PostMapping("/financial-transactions")
     @ResponseStatus(HttpStatus.OK)
-    public void processFinancialTransaction(@RequestParam Long restaurantId,
-                                            @RequestParam double amount) {
+    public void processFinancialTransaction(@RequestParam String restaurantId,
+                                         @RequestParam double amount) {
         adminService.processFinancialTransaction(restaurantId, amount);
     }
 }

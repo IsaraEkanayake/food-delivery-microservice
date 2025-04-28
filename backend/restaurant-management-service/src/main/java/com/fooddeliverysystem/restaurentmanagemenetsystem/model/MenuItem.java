@@ -1,29 +1,23 @@
 package com.fooddeliverysystem.restaurentmanagemenetsystem.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "menu_items")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Document(collection = "menu_items")
 public class MenuItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private String name;
-
     private String description;
-
     private double price;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Restaurant restaurant;
+    private String restaurantId;
+    private String category; // Added this field
 }
-

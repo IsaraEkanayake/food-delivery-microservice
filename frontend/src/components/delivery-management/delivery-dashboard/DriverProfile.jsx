@@ -1,127 +1,102 @@
-// src/components/delivery-management/DriverProfile.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const DriverProfile = ({ driverId, onClose, onUpdate }) => {
-  const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    vehicle: '',
-    password: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError]   = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [driver, setDriver] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const fetchDriver = async () => {
+    // Fetch current driver profile
+    const fetchProfile = async () => {
       try {
-        const resp = await axios.get(
-          `http://localhost:8084/api/driver/${driverId}`
-        );
-        const { fullName, email, phone, vehicle } = resp.data;
-        setForm({ fullName, email, phone, vehicle, password: '' });
+        const { data } = await axios.get(`/api/drivers/${driverId}`);
+        setDriver(data);
       } catch (err) {
-        setError('Failed to load profile.');
+        console.error('Error fetching driver profile:', err);
       }
     };
-    fetchDriver();
+
+    fetchProfile();
   }, [driverId]);
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDriver((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-
+  const handleSave = async () => {
+    setSaving(true);
     try {
-      const resp = await axios.put(
-        `http://localhost:8084/api/driver/${driverId}`,
-        form,
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-      setSuccess('Profile updated successfully!');
-      onUpdate(resp.data);
+      const { data } = await axios.put(`/api/drivers/${driverId}`, driver);
+      onUpdate(data);
+      onClose();
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        'Update failed. Please try again.'
-      );
+      console.error('Error updating driver profile:', err);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  if (!driver) return null;
+
   return (
-    <div className="modal-backdrop show">
-      <div
-        className="modal d-block"
-        tabIndex="-1"
-        role="dialog"
-        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Your Profile</h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={onClose}
+    <div className="modal show d-block" tabIndex="-1">
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Edit Profile</h5>
+            <button type="button" className="btn-close" onClick={onClose} />
+          </div>
+          <div className="modal-body">
+            <div className="mb-3">
+              <label htmlFor="fullName" className="form-label">Full Name</label>
+              <input
+                id="fullName"
+                name="fullName"
+                className="form-control"
+                value={driver.fullName}
+                onChange={handleChange}
               />
             </div>
-            <div className="modal-body">
-              {error && (
-                <div className="alert alert-danger">{error}</div>
-              )}
-              {success && (
-                <div className="alert alert-success">{success}</div>
-              )}
-              <form onSubmit={handleSubmit}>
-                {['fullName', 'email', 'phone', 'vehicle', 'password'].map(field => (
-                  <div className="mb-3" key={field}>
-                    <label className="form-label" htmlFor={field}>
-                      {field === 'fullName'
-                        ? 'Full Name'
-                        : field.charAt(0).toUpperCase() + field.slice(1)}
-                    </label>
-                    <input
-                      id={field}
-                      name={field}
-                      type={field === 'password' ? 'password' : 'text'}
-                      className="form-control"
-                      value={form[field]}
-                      onChange={handleChange}
-                      disabled={loading}
-                      required={field !== 'password'}
-                    />
-                    {field === 'password' && (
-                      <div className="form-text">
-                        Leave blank to keep current password
-                      </div>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading}
-                >
-                  {loading
-                    ? <span
-                        className="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    : 'Save Changes'}
-                </button>
-              </form>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                className="form-control"
+                value={driver.email}
+                onChange={handleChange}
+              />
             </div>
+            <div className="mb-3">
+              <label htmlFor="phone" className="form-label">Phone</label>
+              <input
+                id="phone"
+                name="phone"
+                className="form-control"
+                value={driver.phone}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="vehicle" className="form-label">Vehicle</label>
+              <input
+                id="vehicle"
+                name="vehicle"
+                className="form-control"
+                value={driver.vehicle}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button className="btn btn-secondary" onClick={onClose} disabled={saving}>
+              Cancel
+            </button>
+            <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         </div>
       </div>

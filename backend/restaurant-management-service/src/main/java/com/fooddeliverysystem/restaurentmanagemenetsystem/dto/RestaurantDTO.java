@@ -1,14 +1,18 @@
 package com.fooddeliverysystem.restaurentmanagemenetsystem.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class RestaurantDTO {
-    private Long id;
+    private String id;
     private String name;
     private String address;
     private boolean available;
+    private boolean verified; // Added verification status
 }

@@ -16,46 +16,65 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "Restaurant Controller working!";
-    }
-
+    // Restaurant Endpoints
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantDTO createRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
         return restaurantService.createRestaurant(restaurantDTO);
     }
 
-
-    @PostMapping("/{restaurantId}/menu-items")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MenuItemDTO addMenuItem(@PathVariable Long restaurantId, @RequestBody MenuItemDTO menuItemDTO) {
-        return restaurantService.addMenuItem(restaurantId, menuItemDTO);
+    @GetMapping
+    public List<RestaurantDTO> getAllRestaurants() {
+        return restaurantService.getAllRestaurants();
     }
 
-    @PutMapping("/{restaurantId}/menu-items/{menuItemId}")
-    public MenuItemDTO updateMenuItem(@PathVariable Long restaurantId,
-                                      @PathVariable Long menuItemId,
-                                      @RequestBody MenuItemDTO menuItemDTO) {
-        return restaurantService.updateMenuItem(restaurantId, menuItemId, menuItemDTO);
+    @GetMapping("/{restaurantId}")
+    public RestaurantDTO getRestaurantById(@PathVariable String restaurantId) {
+        return restaurantService.getRestaurantById(restaurantId);
     }
 
-    @DeleteMapping("/{restaurantId}/menu-items/{menuItemId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMenuItem(@PathVariable Long restaurantId, @PathVariable Long menuItemId) {
-        restaurantService.deleteMenuItem(restaurantId, menuItemId);
+    @PutMapping("/{restaurantId}")
+    public RestaurantDTO updateRestaurant(@PathVariable String restaurantId,
+                                        @RequestBody RestaurantDTO restaurantDTO) {
+        return restaurantService.updateRestaurant(restaurantId, restaurantDTO);
     }
 
-    @PutMapping("/{restaurantId}/availability")
-    public RestaurantDTO updateAvailability(@PathVariable Long restaurantId,
-                                            @RequestParam boolean available) {
+    @PutMapping("/{restaurantId}/status")
+    public RestaurantDTO setRestaurantStatus(@PathVariable String restaurantId,
+                                           @RequestParam boolean available) {
         return restaurantService.updateAvailability(restaurantId, available);
     }
 
-    @GetMapping("/{restaurantId}/menu-items")
-    public List<MenuItemDTO> getMenuItems(@PathVariable Long restaurantId) {
+    @DeleteMapping("/{restaurantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRestaurant(@PathVariable String restaurantId) {
+        restaurantService.deleteRestaurant(restaurantId);
+    }
+
+    // Menu Item Endpoints
+    @GetMapping("/{restaurantId}/menu")
+    public List<MenuItemDTO> getAllMenuItems(@PathVariable String restaurantId) {
         return restaurantService.getMenuItems(restaurantId);
     }
-}
 
+    @PostMapping("/{restaurantId}/menu")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MenuItemDTO addMenuItem(@PathVariable String restaurantId,
+                                 @RequestBody MenuItemDTO menuItemDTO) {
+        return restaurantService.addMenuItem(restaurantId, menuItemDTO);
+    }
+
+    @PutMapping("/{restaurantId}/menu/{menuItemId}")
+    public MenuItemDTO updateMenuItem(@PathVariable String restaurantId,
+                                    @PathVariable String menuItemId,
+                                    @RequestBody MenuItemDTO menuItemDTO) {
+        return restaurantService.updateMenuItem(restaurantId, menuItemId, menuItemDTO);
+    }
+
+    @DeleteMapping("/{restaurantId}/menu/{menuItemId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMenuItem(@PathVariable String restaurantId,
+                             @PathVariable String menuItemId) {
+        restaurantService.deleteMenuItem(restaurantId, menuItemId);
+    }
+}

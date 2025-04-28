@@ -34,7 +34,7 @@ const DeliveryRegister = () => {
       localStorage.setItem('driver', JSON.stringify(resp.data));
       
       // redirect to dashboard
-      navigate('/dashboard');
+      navigate('/delivery-dashboard');
     } catch (err) {
       console.error(err);
       setError(
@@ -157,7 +157,7 @@ const DeliveryRegister = () => {
 
         <p className="mt-3 text-center">
           Already have an account?{' '}
-          <Link to="/" className="text-primary text-decoration-none">
+          <Link to="/delivery-login" className="text-primary text-decoration-none">
             Login here
           </Link>
         </p>

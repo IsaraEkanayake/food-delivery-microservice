@@ -26,7 +26,7 @@ const DeliveryLogin = () => {
       localStorage.setItem('driver', JSON.stringify(resp.data));
 
       // navigate to Dashboard
-      navigate('/dashboard');
+      navigate('/delivery-dashboard');
     } catch (err) {
       console.error(err);
       // backend errors come in err.response.data or err.message
@@ -98,7 +98,7 @@ const DeliveryLogin = () => {
 
         <p className="mt-3 text-center">
           Don&apos;t have an account?{' '}
-          <Link to="/register" className="text-primary text-decoration-underline">
+          <Link to="/delivery-register" className="text-primary text-decoration-underline">
             Register here
           </Link>
         </p>

@@ -1,3 +1,4 @@
+// LoginDTO.java
 package com.fooddeliverysystem.restaurentmanagemenetsystem.dto;
 
 import lombok.AllArgsConstructor;
@@ -9,11 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuItemDTO {
-    private String id;
-    private String name;
-    private String description;
-    private double price;
-    private String restaurantId;
-    private String category;
+public class LoginDTO {
+    private String email;
+    private String password;
 }

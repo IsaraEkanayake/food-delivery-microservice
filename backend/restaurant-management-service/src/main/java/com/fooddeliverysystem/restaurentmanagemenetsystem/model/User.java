@@ -1,27 +1,34 @@
 package com.fooddeliverysystem.restaurentmanagemenetsystem.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "users")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Document(collection = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private String username;
-
     private String email;
-
-    @Enumerated(EnumType.STRING)
+    private String password;
     private Role role;
 
     public enum Role {
-        ADMIN, RESTAURANT
+        RESTAURANT_ADMIN, CUSTOMER;
+
+        public static Role fromString(String value) {
+            try {
+                return Role.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid role value: " + value);
+            }
+        }
     }
 }

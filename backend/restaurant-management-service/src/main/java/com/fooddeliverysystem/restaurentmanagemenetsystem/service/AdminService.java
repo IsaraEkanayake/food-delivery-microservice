@@ -8,6 +8,7 @@ import java.util.List;
 public interface AdminService {
     UserDTO registerAdmin(UserDTO userDTO);
     List<UserDTO> getAllUsers();
-    RestaurantDTO verifyRestaurant(Long restaurantId, boolean verified);
-    void processFinancialTransaction(Long restaurantId, double amount);
+    List<RestaurantDTO> getAllRestaurants();
+    RestaurantDTO verifyRestaurant(String restaurantId, boolean verified);
+    void processFinancialTransaction(String restaurantId, double amount);
 }

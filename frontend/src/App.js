@@ -1,12 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
+
+import Home from './components/HomePage';
 import OrderCheckout from './components/order-management/orderCheckout/orderCheckout';
 import SelectOrder from './components/order-management/selectOrder/selectOrder';
 import Cart from './components/order-management/Cart/Cart';
 import Register from './components/order-management/Register/Register';
 import Login from './components/order-management/Login/Login';
 import Status from './components/order-management/Status/Status';
-import Menu from './components/order-management/Menu/Menu';  // ← Import the Menu component
+import Menu from './components/order-management/Menu/Menu';
 
 import DeliveryLogin from './components/delivery-management/delivery-login/DeliveryLogin';
 import DeliveryRegister from './components/delivery-management/delivery-login/DeliveryRegister';
@@ -17,52 +19,51 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
+import LoginPage from "./pages/login";
+import SignupPage from "./pages/SignupPage";
+import MenuPage from "./pages/MenuPage";
+import Restaurants from "./pages/Returants";
+import AddRestaurant from "./pages/AddRestaurant";
+import EditRestaurant from './pages/EditRestaurant';
+import AddMenuPage from "./pages/AddMenuPage";
+import EditMenuItem from './pages/EditMenuItem';
+import Restaurants_user from './pages/Returants_user'
+import MenuPage_user from './pages/MenuPage_user'
+
 function App() {
   return (
     <Router>
-      <div>
-        {/* Navigation Bar */}
-        <nav style={{ padding: '20px', textAlign: 'center' }}>
-          <Link to="/" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Home
-          </Link>
-          <Link to="/menu" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Menu
-          </Link> {/* ← New Menu link */}
-          <Link to="/select-order" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Select Order
-          </Link>
-          <Link to="/cart" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Cart
-          </Link>
-          <Link to="/register" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Register
-          </Link>
-          <Link to="/login" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Login
-          </Link>
-          <Link to="/status" style={{ margin: '0 15px', textDecoration: 'none', color: '#00B8D4' }}>
-            Status
-          </Link>
-        </nav>
+      <Routes>
+        {/* Home Route */}
+        <Route path="/" element={<Home />} />
 
-        {/* Page Routes */}
-        <Routes>
-          <Route path="/" element={<OrderCheckout />} />
-          <Route path="/menu" element={<Menu />} /> {/* ← New Menu route */}
-          <Route path="/select-order" element={<SelectOrder />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/status" element={<Status />} />
+        {/* Order Service Routes */}
+        <Route path="/order" element={<OrderCheckout />} />
+        <Route path="/order-menu" element={<Menu />} />
+        <Route path="/select-order" element={<SelectOrder />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/order-register" element={<Register />} />
+        <Route path="/order-login" element={<Login />} />
+        <Route path="/status" element={<Status />} />
 
-          {/* Delivery Authentication Screens */}
-          <Route path="/delivery-login" element={<DeliveryLogin />} />
-          <Route path="/delivery-register" element={<DeliveryRegister />} />
-          <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
+        {/* Delivery Service Routes */}
+        <Route path="/delivery" element={<DeliveryLogin />} />
+        <Route path="/delivery-register" element={<DeliveryRegister />} />
+        <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
 
-        </Routes>
-      </div>
+        {/* Restaurant Service Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/menu/:id" element={<MenuPage />} />
+        <Route path="/menu_user/:id" element={<MenuPage_user />} />
+        <Route path="/restaurants" element={<Restaurants />} />
+        <Route path="/restaurants_user" element={<Restaurants_user />} />
+        <Route path="/add-restaurant" element={<AddRestaurant />} />
+        <Route path="/edit-restaurant/:id" element={<EditRestaurant />} />
+        <Route path="/restaurants/:restaurantId/add-menu" element={<AddMenuPage />} /> 
+        <Route path="/menu/:restaurantId/edit/:menuId" element={<EditMenuItem />} /> 
+
+      </Routes>
     </Router>
   );
 }
