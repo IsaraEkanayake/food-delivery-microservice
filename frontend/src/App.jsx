@@ -51,7 +51,7 @@ function App() {
         <Route path="/delivery-register" element={<DeliveryRegister />} />
         <Route path="/delivery-dashboard" element={<DeliveryDashboard />} />
 
-        {/* Restaurant Service Routes */}
+        {/* Restaurant  Service Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/menu/:id" element={<MenuPage />} />
