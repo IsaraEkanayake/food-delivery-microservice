@@ -1,4 +1,4 @@
-# 🍔 FoodieFly 
+# 🍔 FoodDeliveryService 
 # Food Ordering & Delivery System
 
 <div align="center">
@@ -13,7 +13,7 @@
 
 ## 📋 Overview
 
-FoodieFly is a modern, cloud-native food ordering and delivery system built with microservices architecture. It provides a seamless experience for customers to order food, restaurants to manage their menus, and delivery personnel to handle deliveries efficiently.
+FoodDeliveryService is a modern, cloud-native food ordering and delivery system built with microservices architecture. It provides a seamless experience for customers to order food, restaurants to manage their menus, and delivery personnel to handle deliveries efficiently.
 
 ## ✨ Features
 
@@ -67,7 +67,6 @@ The system is built using a microservices architecture with the following compon
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - npm (v8.x or higher)
 - MongoDB (v4.4 or higher)
 - Docker and Docker Compose (for containerized deployment)
@@ -125,14 +124,10 @@ cd frontend && npm start
 
 ### Project Structure
 ```
-FoodieFly/
+FoodDeliveryService /
 ├── frontend/                 # React frontend application
-├── restaurant_management_service/  # Restaurant management microservice
-├── order_management_service/       # Order management microservice
-├── delivery_management_service/    # Delivery management microservice
-├── payment_service/               # Payment processing microservice
-├── docker-compose.yml            # Docker Compose configuration
-└── README.md                     # Project documentation
+├── backend/                  #springboot backend
+└── README.md                 # Project documentation
 ```
 
 ### Environment Variables
@@ -141,7 +136,7 @@ Each service requires specific environment variables. Create `.env` files in eac
 
 ```env
 # MongoDB Connection
-MONGODB_URI=mongodb://localhost:27017/foodiefly
+MONGODB_URI=mongodb://localhost:27017/FoodDeliveryService 
 
 # JWT Secret
 JWT_SECRET=your_jwt_secret
