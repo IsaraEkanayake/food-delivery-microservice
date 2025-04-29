@@ -78,8 +78,8 @@ The system is built using a microservices architecture with the following compon
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/FoodieFly.git
-cd FoodieFly
+git clone https://github.com/yourname/food-delivery-microservice.git
+cd food-delivery-microservice
 ```
 
 2. Start all services using Docker Compose:
@@ -89,16 +89,9 @@ docker-compose up
 
 #### Method 2: Manual Setup
 
-1. Install dependencies for all services:
-```bash
-# Install backend service dependencies
-cd user_authentication_service && npm install
-cd ../restaurant_management_service && npm install
-cd ../order_management_service && npm install
-cd ../payment_service && npm install
-cd ../delivery_management_service && npm install
 
-# Install frontend dependencies
+
+1 Install frontend dependencies
 cd ../frontend && npm install
 ```
 
@@ -106,22 +99,17 @@ cd ../frontend && npm install
    - On Windows: Run `run.bat`
    - On Linux/Mac: Start each service in separate terminals:
 ```bash
+
 # Terminal 1
-cd user_authentication_service && npm start
+cd restaurant_management_service && mvn spring-boot:run
 
 # Terminal 2
-cd restaurant_management_service && npm start
+cd order_management_service && mvn spring-boot:run
 
 # Terminal 3
-cd order_management_service && npm start
+cd delivery_management_service && mvn spring-boot:run
 
 # Terminal 4
-cd payment_service && npm start
-
-# Terminal 5
-cd delivery_management_service && npm start
-
-# Terminal 6
 cd frontend && npm start
 ```
 
@@ -129,11 +117,9 @@ cd frontend && npm start
 
 - Frontend: http://localhost:3000
 - Backend Services:
-  - User Authentication: http://localhost:5001
-  - Restaurant Management: http://localhost:5004
-  - Order Management: http://localhost:5003
-  - Payment Service: http://localhost:5010
-  - Delivery Management: http://localhost:5008
+  - Restaurant Management: http://localhost:8082
+  - Order Management: http://localhost:8083
+  - Delivery Management: http://localhost:8084
 
 ## 🛠️ Development
 
@@ -141,7 +127,6 @@ cd frontend && npm start
 ```
 FoodieFly/
 ├── frontend/                 # React frontend application
-├── user_authentication_service/    # User authentication microservice
 ├── restaurant_management_service/  # Restaurant management microservice
 ├── order_management_service/       # Order management microservice
 ├── delivery_management_service/    # Delivery management microservice
@@ -162,7 +147,7 @@ MONGODB_URI=mongodb://localhost:27017/foodiefly
 JWT_SECRET=your_jwt_secret
 
 # Service Ports
-PORT=5001  # Adjust port number for each service
+PORT=8080 # Adjust port number for each service
 ```
 
 ## 🤝 Contributing
@@ -183,11 +168,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [React](https://reactjs.org/)
-- [Node.js](https://nodejs.org/)
+- [Springboot](https://Springboot.org/)
 - [MongoDB](https://www.mongodb.com/)
 - [Docker](https://www.docker.com/)
-- [Express.js](https://expressjs.com/)
 
 ## 📞 Support
 
