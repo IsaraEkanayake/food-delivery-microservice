@@ -2,7 +2,6 @@
 # Food Ordering & Delivery System
 
 <div align="center">
-  <img src="frontend/src/images/logo.png" alt="FoodieFly Logo" width="200"/>
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Docker](https://img.shields.io/badge/Docker-Enabled-blue)](https://www.docker.com/)
