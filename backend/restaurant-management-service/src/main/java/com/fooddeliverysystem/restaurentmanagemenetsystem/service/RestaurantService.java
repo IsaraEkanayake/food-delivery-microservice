@@ -6,11 +6,16 @@ import com.fooddeliverysystem.restaurentmanagemenetsystem.dto.RestaurantDTO;
 import java.util.List;
 
 public interface RestaurantService {
-    MenuItemDTO addMenuItem(Long restaurantId, MenuItemDTO menuItemDTO);
-    MenuItemDTO updateMenuItem(Long restaurantId, Long menuItemId, MenuItemDTO menuItemDTO);
-    void deleteMenuItem(Long restaurantId, Long menuItemId);
-    RestaurantDTO updateAvailability(Long restaurantId, boolean available);
-    List<MenuItemDTO> getMenuItems(Long restaurantId);
-
     RestaurantDTO createRestaurant(RestaurantDTO restaurantDTO);
+    List<RestaurantDTO> getAllRestaurants();
+    RestaurantDTO getRestaurantById(String restaurantId);
+    RestaurantDTO updateRestaurant(String restaurantId, RestaurantDTO restaurantDTO);
+    RestaurantDTO updateAvailability(String restaurantId, boolean available);
+    void deleteRestaurant(String restaurantId);
+    
+    MenuItemDTO addMenuItem(String restaurantId, MenuItemDTO menuItemDTO);
+    MenuItemDTO updateMenuItem(String restaurantId, String menuItemId, MenuItemDTO menuItemDTO);
+    void deleteMenuItem(String restaurantId, String menuItemId);
+    List<MenuItemDTO> getMenuItems(String restaurantId);
+    List<MenuItemDTO> getMenuItemsByCategory(String restaurantId, String category);
 }

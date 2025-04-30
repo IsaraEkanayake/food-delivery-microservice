@@ -8,6 +8,10 @@ import lombok.*;
 @Builder
 public class CustomerDTO {
     private Long id;
-    private String name;
+    private String fullname;
     private String email;
+    private String phoneNumber;
+    private String deliveryAddress;
+    private String password;
+    private String confirmPassword;
 }

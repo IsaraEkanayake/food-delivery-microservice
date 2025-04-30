@@ -8,7 +8,9 @@ import lombok.*;
 @Builder
 public class OrderItemDTO {
     private Long id;
-    private String productName;
-    private Integer quantity;
-    private Double price;
+    private String name;
+    private String price;
+    private String portion;
+    private String specialInstructions;
+    private Integer qty;
 }
