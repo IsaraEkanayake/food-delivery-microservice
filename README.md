@@ -2,6 +2,7 @@
 # Food Ordering & Delivery System
 
 <div align="center">
+
   <img src="frontend/src/images/logo.png" alt="FoodieFly Logo" width="200"/>
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -145,9 +146,26 @@ JWT_SECRET=your_jwt_secret
 PORT=8080 # Adjust port number for each service
 ```
 
+
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+
 ## 🙏 Acknowledgments
 
 - [Springboot](https://Springboot.org/)
 - [MongoDB](https://www.mongodb.com/)
 - [Docker](https://www.docker.com/)
+
 
