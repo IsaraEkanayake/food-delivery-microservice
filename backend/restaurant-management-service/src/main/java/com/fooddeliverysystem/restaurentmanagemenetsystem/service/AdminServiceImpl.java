@@ -8,8 +8,9 @@ import com.fooddeliverysystem.restaurentmanagemenetsystem.repository.RestaurantR
 import com.fooddeliverysystem.restaurentmanagemenetsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.fooddeliverysystem.restaurentmanagemenetsystem.exception.ResourceNotFoundException;
 
-import jakarta.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,48 +22,72 @@ public class AdminServiceImpl implements AdminService {
     private final RestaurantRepository restaurantRepository;
 
     @Override
+    @Transactional
     public UserDTO registerAdmin(UserDTO userDTO) {
-        // Create a new user and force the ADMIN role
+        
+
         User user = User.builder()
                 .username(userDTO.getUsername())
                 .email(userDTO.getEmail())
-                .role(User.Role.ADMIN)  // Using enum here (ensure your User model supports this)
+                .role(User.Role.fromString(userDTO.getRole()))
                 .build();
+        
         user = userRepository.save(user);
-        userDTO.setId(user.getId());
-        return userDTO;
+        return convertToUserDTO(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> UserDTO.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .email(user.getEmail())
-                        .role(user.getRole().name())
-                        .build())
+                .map(this::convertToUserDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public RestaurantDTO verifyRestaurant(Long restaurantId, boolean verified) {
+    @Transactional(readOnly = true)
+    public List<RestaurantDTO> getAllRestaurants() {
+        return restaurantRepository.findAll().stream()
+                .map(this::convertToRestaurantDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public RestaurantDTO verifyRestaurant(String restaurantId, boolean verified) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
-        // For example, verifying a restaurant could mean updating its availability.
-        restaurant.setAvailable(verified);
-        restaurantRepository.save(restaurant);
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " + restaurantId));
+        restaurant.setVerified(verified);
+        restaurant = restaurantRepository.save(restaurant);
+        return convertToRestaurantDTO(restaurant);
+    }
+
+    @Override
+    @Transactional
+    public void processFinancialTransaction(String restaurantId, double amount) {
+        if (!restaurantRepository.existsById(restaurantId)) {
+            throw new ResourceNotFoundException("Restaurant not found with id: " + restaurantId);
+        }
+        // Actual implementation would interact with payment service
+        System.out.println("Processed transaction of " + amount + " for restaurant " + restaurantId);
+    }
+
+    private UserDTO convertToUserDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
+    }
+
+    private RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
         return RestaurantDTO.builder()
                 .id(restaurant.getId())
                 .name(restaurant.getName())
                 .address(restaurant.getAddress())
                 .available(restaurant.isAvailable())
+                .verified(restaurant.isVerified())
                 .build();
-    }
-
-    @Override
-    public void processFinancialTransaction(Long restaurantId, double amount) {
-        // In a real system, integrate with a payment gateway or financial service.
-        System.out.println("Processed transaction for restaurant " + restaurantId + " for amount: " + amount);
     }
 }

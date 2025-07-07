@@ -48,7 +48,7 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
-      navigate("/dashboard");
+      navigate("/delivery-dashboard");
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
       console.error("Login error:", err);
@@ -195,7 +195,7 @@ const Login = () => {
           <p style={{ color: "#fff", fontSize: "14px" }}>
             Don't have an account?{" "}
             <a
-              href="/register"
+              href="/order-register"
               style={{ color: "#00E5FF", textDecoration: "underline" }}
             >
               Register

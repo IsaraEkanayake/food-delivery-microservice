@@ -21,9 +21,12 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "tailwindcss": "^4.1.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "antd": "^5.14.1",
+    "@mdi/js": "^7.4.47",
+    "@mdi/react": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -48,5 +51,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:8082"
 }

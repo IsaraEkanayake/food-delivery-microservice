@@ -2,6 +2,7 @@
 # Food Ordering & Delivery System
 
 <div align="center">
+
   <img src="frontend/src/images/logo.png" alt="FoodieFly Logo" width="200"/>
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -145,6 +146,7 @@ JWT_SECRET=your_jwt_secret
 PORT=8080 # Adjust port number for each service
 ```
 
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -157,9 +159,6 @@ PORT=8080 # Adjust port number for each service
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Authors
-
-- Janitha Gamage - Initial work - [CJ7](https://github.com/JordanCJ7)
 
 ## 🙏 Acknowledgments
 
@@ -167,9 +166,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [MongoDB](https://www.mongodb.com/)
 - [Docker](https://www.docker.com/)
 
-## 📞 Support
 
-For support, 
-- email janithasuranjana2001@gmail.com 
-- Call +94743288572 / +94725253444
-- or create an issue in the repository.

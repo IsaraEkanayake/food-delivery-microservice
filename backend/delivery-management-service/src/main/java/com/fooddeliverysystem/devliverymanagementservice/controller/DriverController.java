@@ -1,37 +1,47 @@
 package com.fooddeliverysystem.devliverymanagementservice.controller;
 
 import com.fooddeliverysystem.devliverymanagementservice.dto.DriverDTO;
-import com.fooddeliverysystem.devliverymanagementservice.service.DeliveryService;
+import com.fooddeliverysystem.devliverymanagementservice.model.Driver;
+import com.fooddeliverysystem.devliverymanagementservice.service.DriverService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/drivers")
+@RequestMapping("/api/driver")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*") // Allow React frontend to hit the backend
 public class DriverController {
 
-    private final DeliveryService deliveryService;
+    private final DriverService driverService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "Driver Controller working!";
-    }
-
-    // Endpoint to register a new driver
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DriverDTO registerDriver(@RequestBody DriverDTO driverDTO) {
-        return deliveryService.registerDriver(driverDTO);
+    public ResponseEntity<Driver> registerDriver(@RequestBody DriverDTO driverDTO) {
+        Driver registeredDriver = driverService.registerDriver(driverDTO);
+        return ResponseEntity.ok(registeredDriver);
     }
 
-    // Endpoint to update driver's location and availability
-    @PutMapping("/{driverId}/location")
-    public DriverDTO updateDriverLocation(@PathVariable Long driverId,
-                                          @RequestParam Double latitude,
-                                          @RequestParam Double longitude,
-                                          @RequestParam Boolean available) {
-        return deliveryService.updateDriverLocation(driverId, latitude, longitude, available);
+    @PostMapping("/login")
+    public ResponseEntity<Driver> loginDriver(@RequestBody DriverDTO driverDTO) {
+        Driver driver = driverService.loginDriver(driverDTO);
+        return ResponseEntity.ok(driver);
+    }
+
+    /** View driver profile **/
+    @GetMapping("/{id}")
+    public ResponseEntity<Driver> getDriver(@PathVariable Long id) {
+        Driver driver = driverService.getDriverById(id);
+        return ResponseEntity.ok(driver);
+    }
+
+    /** Update driver profile **/
+    @PutMapping("/{id}")
+    public ResponseEntity<Driver> updateDriver(
+            @PathVariable Long id,
+            @RequestBody DriverDTO driverDTO
+    ) {
+        Driver updated = driverService.updateDriver(id, driverDTO);
+        return ResponseEntity.ok(updated);
     }
 }
 

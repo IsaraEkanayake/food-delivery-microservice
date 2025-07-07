@@ -1,14 +1,18 @@
 package com.fooddeliverysystem.restaurentmanagemenetsystem.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserDTO {
-    private Long id;
+    private String id;
     private String username;
     private String email;
-    private String role;
+    private String password;
+    private String role; // Will accept "ADMIN", "RESTAURANT_ADMIN", or "CUSTOMER"
 }
