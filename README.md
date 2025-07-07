@@ -147,6 +147,7 @@ PORT=8080 # Adjust port number for each service
 ```
 
 
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -158,6 +159,7 @@ PORT=8080 # Adjust port number for each service
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 
 ## 🙏 Acknowledgments
